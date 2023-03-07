@@ -4,8 +4,8 @@ define(['backbone', 'js/models/location', 'js/collections/course_grader', 'edx-u
         'use strict';
         var CourseGradingPolicy = Backbone.Model.extend({
             defaults: {
-                graders: null,  // CourseGraderCollection
-                grade_cutoffs: null,  // CourseGradeCutoff model
+                graders: null, // CourseGraderCollection
+                grade_cutoffs: null, // CourseGradeCutoff model
                 grace_period: null, // either null or { hours: n, minutes: m, ...}
                 minimum_grade_credit: null // either null or percentage
             },
