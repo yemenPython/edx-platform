@@ -75,8 +75,10 @@ function(ValidatingView, _, $, ui, GraderView, StringUtils, HtmlUtils) {
             gradeCollection.each(function(gradeModel) {
                 HtmlUtils.append(gradelist, self.template({model: gradeModel}));
                 var newEle = gradelist.children().last();
-                var newView = new GraderView({el: newEle,
-                    model: gradeModel, collection: gradeCollection});
+                var newView = new GraderView({
+el: newEle,
+                    model: gradeModel, collection: gradeCollection
+});
                 // Listen in order to rerender when the 'cancel' button is
                 // pressed
                 self.listenTo(newView, 'revert', _.bind(self.render, self));
@@ -166,7 +168,8 @@ function(ValidatingView, _, $, ui, GraderView, StringUtils, HtmlUtils) {
                     descriptor: cutoff.designation,
                     width: nextWidth,
                     contenteditable: true,
-                    removable: removable})
+                    removable: removable
+})
                 );
                 if (draggable) {
                     var newBar = gradelist.children().last(); // get the dom object not the unparsed string
@@ -311,7 +314,8 @@ function(ValidatingView, _, $, ui, GraderView, StringUtils, HtmlUtils) {
                 descriptor: this.GRADES[gradeLength],
                 width: targetWidth,
                 contenteditable: true,
-                removable: true});
+                removable: true
+});
             var gradeDom = this.$el.find('.grades');
             gradeDom.children().last().before(HtmlUtils.ensureHtml(newGradeHtml).toString());
             var newEle = gradeDom.children()[gradeLength];
@@ -386,7 +390,8 @@ function(ValidatingView, _, $, ui, GraderView, StringUtils, HtmlUtils) {
                     self.renderCutoffBar();
                 },
                 reset: true,
-                silent: true});
+                silent: true
+});
         },
         showNotificationBar: function() {
         // We always call showNotificationBar with the same args, just
