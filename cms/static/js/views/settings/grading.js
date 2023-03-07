@@ -77,7 +77,8 @@ function(ValidatingView, _, $, ui, GraderView, StringUtils, HtmlUtils) {
                 var newEle = gradelist.children().last();
                 var newView = new GraderView({
                     el: newEle,
-                    model: gradeModel, collection: gradeCollection
+                    model: gradeModel,
+                    collection: gradeCollection
                 });
                 // Listen in order to rerender when the 'cancel' button is
                 // pressed
@@ -124,7 +125,7 @@ function(ValidatingView, _, $, ui, GraderView, StringUtils, HtmlUtils) {
             this.model.set('minimum_grade_credit', newVal, {validate: true});
         },
         updateModel: function(event) {
-            if (!this.selectorToField[event.currentTarget.id]) return;
+            if (!this.selectorToField[event.currentTarget.id]) { return; }
 
             switch (this.selectorToField[event.currentTarget.id]) {
             case 'grace_period':
@@ -281,7 +282,7 @@ function(ValidatingView, _, $, ui, GraderView, StringUtils, HtmlUtils) {
             var _this = this;
             var gradeElements = this.$el.find('.grades .letter-grade[contenteditable=true]');
             _.each(gradeElements, function(element, index) {
-                if (index !== 0) $(element).text(_this.GRADES[index]);
+                if (index !== 0) { $(element).text(_this.GRADES[index]); }
             });
         },
 
@@ -361,8 +362,7 @@ function(ValidatingView, _, $, ui, GraderView, StringUtils, HtmlUtils) {
         },
 
         failLabel: function() {
-            if (this.descendingCutoffs.length === 1) return 'Fail';
-            else return 'F';
+            if (this.descendingCutoffs.length === 1) { return 'Fail'; } else { return 'F'; }
         },
         setFailLabel: function() {
             this.$el.find('.grades .letter-grade').last().text(this.failLabel());
