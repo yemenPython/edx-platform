@@ -76,9 +76,9 @@ function(ValidatingView, _, $, ui, GraderView, StringUtils, HtmlUtils) {
                 HtmlUtils.append(gradelist, self.template({model: gradeModel}));
                 var newEle = gradelist.children().last();
                 var newView = new GraderView({
-el: newEle,
+                    el: newEle,
                     model: gradeModel, collection: gradeCollection
-});
+                });
                 // Listen in order to rerender when the 'cancel' button is
                 // pressed
                 self.listenTo(newView, 'revert', _.bind(self.render, self));
@@ -169,7 +169,7 @@ el: newEle,
                     width: nextWidth,
                     contenteditable: true,
                     removable: removable
-})
+                })
                 );
                 if (draggable) {
                     var newBar = gradelist.children().last(); // get the dom object not the unparsed string
@@ -315,7 +315,7 @@ el: newEle,
                 width: targetWidth,
                 contenteditable: true,
                 removable: true
-});
+            });
             var gradeDom = this.$el.find('.grades');
             gradeDom.children().last().before(HtmlUtils.ensureHtml(newGradeHtml).toString());
             var newEle = gradeDom.children()[gradeLength];
@@ -391,7 +391,7 @@ el: newEle,
                 },
                 reset: true,
                 silent: true
-});
+            });
         },
         showNotificationBar: function() {
         // We always call showNotificationBar with the same args, just
