@@ -328,12 +328,12 @@ urlpatterns += [
     ),
     re_path(
         fr'^videos/{settings.USAGE_KEY_PATTERN}$',
-        courseware_views.render_public_video_xblock,
+        courseware_views.PublicVideoXBlockView.as_view(),
         name=RENDER_VIDEO_XBLOCK_NAME,
     ),
     re_path(
         fr'^videos/{settings.USAGE_KEY_PATTERN}/embed$',
-        courseware_views.render_public_video_xblock_embed,
+        courseware_views.PublicVideoXBlockEmbedView.as_view(),
         name=RENDER_VIDEO_XBLOCK_EMBED_NAME,
     ),
 
@@ -665,6 +665,12 @@ urlpatterns += [
     re_path(
         fr'^courses/{settings.COURSE_ID_PATTERN}/',
         include('openedx.features.calendar_sync.urls'),
+    ),
+
+    # Learner profile
+    path(
+        'u/',
+        include('openedx.features.learner_profile.urls'),
     ),
 
     # Survey Report
