@@ -420,10 +420,10 @@ define(['jquery', 'backbone', 'underscore', 'gettext', 'js/views/baseview',
 
         validateDueIn: function() {
             this.$('#relative_weeks_due_projected').hide();
-            if (this.getValue() > 18){
+            if (this.getValue() > 18) {
                 this.$('#relative_weeks_due_warning_max').show();
                 BaseModal.prototype.disableActionButton.call(this.parent, 'save');
-            } else if (this.getValue() < 1){
+            } else if (this.getValue() < 1) {
                 this.$('#relative_weeks_due_warning_min').show();
                 BaseModal.prototype.disableActionButton.call(this.parent, 'save');
             } else {
@@ -448,9 +448,9 @@ define(['jquery', 'backbone', 'underscore', 'gettext', 'js/views/baseview',
 
         getRequestData: function() {
             // Grab all the sections, map them to their block_ids, then return as an Array
-            var sectionIds = $('.outline-section').map(function(){ return this.id; }).get();
+            var sectionIds = $('.outline-section').map(function() { return this.id; }).get();
             // Grab all the subsections, map them to their block_ids, then return as an Array
-            var subsectionIds = $('.outline-subsection').map(function(){ return this.id; }).get();
+            var subsectionIds = $('.outline-subsection').map(function() { return this.id; }).get();
             var relative_weeks_due = null;
             if (this.getValue() < 19 && this.getValue() > 0 && $('#grading_type').val() !== 'notgraded') {
                 relative_weeks_due = this.getValue();
