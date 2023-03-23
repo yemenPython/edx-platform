@@ -80,6 +80,7 @@
 
 # ... add dependencies here
 
+git+https://github.com/edx/edx-arch-experiments.git@2f183e9cbc0c81c2d1dccde0985cc735f2ee1325#egg=edx-arch-experiments==1.2.0+timmc1
 
 ##############################################################################
 # Critical fixes for packages that are not yet available in a PyPI release.
