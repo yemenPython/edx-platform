@@ -497,6 +497,10 @@ EVENT_BUS_KAFKA_SCHEMA_REGISTRY_URL = 'http://edx.devstack.schema-registry:8081'
 EVENT_BUS_KAFKA_BOOTSTRAP_SERVERS = 'edx.devstack.kafka:29092'
 EVENT_BUS_TOPIC_PREFIX = 'dev'
 
+######################## Subscriptions API SETTINGS ########################
+SUBSCRIPTIONS_API_ROOT = "http://host.docker.internal:18750"
+SUBSCRIPTIONS_API_PATH = f"{SUBSCRIPTIONS_API_ROOT}/api/v1/stripe-subscription/"
+
 ################# New settings must go ABOVE this line #################
 ########################################################################
 # See if the developer has any local overrides.

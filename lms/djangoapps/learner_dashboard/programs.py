@@ -28,10 +28,11 @@ from openedx.core.djangoapps.programs.models import (
 from openedx.core.djangoapps.programs.utils import (
     ProgramProgressMeter,
     get_certificates,
-    get_program_marketing_url,
     get_industry_and_credit_pathways,
+    get_program_and_course_data,
+    get_program_marketing_url,
     get_program_urls,
-    get_program_and_course_data
+    get_programs_subscription_data
 )
 from openedx.core.djangoapps.user_api.preferences.api import get_user_preferences
 from openedx.core.djangolib.markup import HTML
@@ -57,11 +58,13 @@ class ProgramsFragmentView(EdxFragmentView):
             raise Http404
 
         meter = ProgramProgressMeter(request.site, user, mobile_only=mobile_only)
+        program_subscription_data = get_programs_subscription_data(user)
 
         context = {
             'marketing_url': get_program_marketing_url(programs_config, mobile_only),
             'programs': meter.engaged_programs,
-            'progress': meter.progress()
+            'progress': meter.progress(),
+            'program_subscription_data': program_subscription_data,
         }
         html = render_to_string('learner_dashboard/programs_fragment.html', context)
         programs_fragment = Fragment(html)
@@ -114,6 +117,7 @@ class ProgramDetailsFragmentView(EdxFragmentView):
 
         program_discussion_lti = ProgramDiscussionLTI(program_uuid, request)
         program_live_lti = ProgramLiveLTI(program_uuid, request)
+        program_subscription_data = get_programs_subscription_data(user, program_uuid)
 
         def program_tab_view_enabled() -> bool:
             return program_tab_view_is_enabled() and (
@@ -127,6 +131,7 @@ class ProgramDetailsFragmentView(EdxFragmentView):
             'urls': urls,
             'user_preferences': get_user_preferences(user),
             'program_data': program_data,
+            'program_subscription_data': program_subscription_data,
             'course_data': course_data,
             'certificate_data': certificate_data,
             'industry_pathways': industry_pathways,
@@ -141,7 +146,6 @@ class ProgramDetailsFragmentView(EdxFragmentView):
                 'iframe': program_live_lti.render_iframe()
             }
         }
-
         html = render_to_string('learner_dashboard/program_details_fragment.html', context)
         program_details_fragment = Fragment(html)
         self.add_fragment_resource_urls(program_details_fragment)

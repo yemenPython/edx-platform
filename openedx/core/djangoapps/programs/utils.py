@@ -8,6 +8,7 @@ from copy import deepcopy
 from itertools import chain
 from urllib.parse import urljoin, urlparse, urlunparse
 
+import requests
 from dateutil.parser import parse
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -15,10 +16,10 @@ from django.contrib.sites.models import Site
 from django.core.cache import cache
 from django.urls import reverse
 from django.utils.functional import cached_property
+from edx_rest_api_client.auth import SuppliedJwtAuth
 from opaque_keys.edx.keys import CourseKey
 from pytz import utc
 from requests.exceptions import RequestException
-from xmodule.modulestore.django import modulestore
 
 from common.djangoapps.course_modes.api import get_paid_modes_for_course
 from common.djangoapps.course_modes.models import CourseMode
@@ -35,15 +36,17 @@ from openedx.core.djangoapps.catalog.constants import PathwayType
 from openedx.core.djangoapps.catalog.utils import (
     get_fulfillable_course_runs_for_entitlement,
     get_pathways,
-    get_programs,
+    get_programs
 )
 from openedx.core.djangoapps.commerce.utils import get_ecommerce_api_base_url, get_ecommerce_api_client
 from openedx.core.djangoapps.content.course_overviews.models import CourseOverview
 from openedx.core.djangoapps.credentials.utils import get_credentials, get_credentials_records_url
 from openedx.core.djangoapps.enrollments.api import get_enrollments
 from openedx.core.djangoapps.enrollments.permissions import ENROLL_IN_COURSE
+from openedx.core.djangoapps.oauth_dispatch.jwt import create_jwt_for_user
 from openedx.core.djangoapps.programs import ALWAYS_CALCULATE_PROGRAM_PRICE_AS_ANONYMOUS_USER
 from openedx.core.djangoapps.site_configuration import helpers as configuration_helpers
+from xmodule.modulestore.django import modulestore
 
 # The datetime module's strftime() methods require a year >= 1900.
 DEFAULT_ENROLLMENT_START_DATE = datetime.datetime(1900, 1, 1, tzinfo=utc)
@@ -1028,3 +1031,50 @@ def is_user_enrolled_in_program_type(user, program_type_slug, paid_modes_only=Fa
         elif course_run_id in course_runs:
             return True
     return False
+
+
+def get_subscription_api_client(user):
+    """
+    Returns an API client which can be used to make Subscriptions API requests.
+    """
+    scopes = [
+        'user_id',
+        'email',
+        'profile'
+    ]
+    jwt = create_jwt_for_user(user, scopes=scopes)
+    log.info(jwt)
+    client = requests.Session()
+    client.auth = SuppliedJwtAuth(jwt)
+
+    return client
+
+
+def get_programs_subscription_data(user, program_uuid=None):
+    """
+    Returns the subscription data for a user's program if uuid is specified
+    else return data for user's all subscriptions.
+    """
+    client = get_subscription_api_client(user)
+    api_path = f"{settings.SUBSCRIPTIONS_API_PATH}"
+    subscription_data = []
+
+    log.info('Requesting Program subscription data')
+    params = {'page': 1, 'resource_id': program_uuid, 'most_active_and_recent': True} if program_uuid else {'page': 1}
+    try:
+        if program_uuid:
+            response = client.get(api_path, params=params)
+            response.raise_for_status()
+            subscription_data = response.json().get('results', [])[0:1]
+        else:
+            while params.get('page'):
+                response = client.get(api_path, params=params)
+                response.raise_for_status()
+                subscription_data.extend(response.json().get('results', []))
+                params['page'] = response.json().get('next')
+        return subscription_data
+    except:  # pylint: disable=bare-except
+        log.exception(
+            msg='Failed to retrieve Program Subscription Data',
+        )
+        return []
