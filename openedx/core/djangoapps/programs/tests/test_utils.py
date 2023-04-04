@@ -1776,9 +1776,8 @@ class TestGetProgramsSubscriptionData(TestCase):
         mock_client.get.assert_called_once_with(
             settings.SUBSCRIPTIONS_API_PATH,
             params={
+                "most_active_and_recent": "true",
                 "resource_id": program_uuid,
-                "page": 1,
-                "most_active_and_recent": "true"
             }
         )
         assert result == [{"data": "mock_data"}]

@@ -1063,11 +1063,12 @@ def get_programs_subscription_data(user, program_uuid=None):
 
     try:
         if program_uuid:
+            params = {'resource_id': program_uuid, 'most_active_and_recent': True}
             response = client.get(api_path)
             response.raise_for_status()
             subscription_data = response.json().get('results', [])[0:1]
         else:
-            params = {'page': 1, 'resource_id': program_uuid, 'most_active_and_recent': True}
+            params = {'page': 1}
             while params.get('page'):
                 response = client.get(api_path, params=params)
                 response.raise_for_status()
