@@ -1063,17 +1063,16 @@ def get_programs_subscription_data(user, program_uuid=None):
 
     try:
         if program_uuid:
-            params = {'resource_id': program_uuid, 'most_active_and_recent': True}
-            response = client.get(api_path)
+            response = client.get(api_path, params={'resource_id': program_uuid, 'most_active_and_recent': True})
             response.raise_for_status()
             subscription_data = response.json().get('results', [])[0:1]
         else:
-            params = {'page': 1}
-            while params.get('page'):
-                response = client.get(api_path, params=params)
+            parameters = {'page': 1}
+            while parameters.get('page'):
+                response = client.get(api_path, params=parameters)
                 response.raise_for_status()
                 subscription_data.extend(response.json().get('results', []))
-                params['page'] = response.json().get('next')
+                parameters['page'] = response.json().get('next')
         return subscription_data
     except:  # pylint: disable=bare-except
         log.exception(
