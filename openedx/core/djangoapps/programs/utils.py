@@ -1060,7 +1060,7 @@ def get_programs_subscription_data(user, program_uuid=None):
     subscription_data = []
 
     log.info('Requesting Program subscription data')
-    
+
     try:
         if program_uuid:
             response = client.get(api_path)
