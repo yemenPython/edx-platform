@@ -1060,13 +1060,14 @@ def get_programs_subscription_data(user, program_uuid=None):
     subscription_data = []
 
     log.info('Requesting Program subscription data')
-    params = {'page': 1, 'resource_id': program_uuid, 'most_active_and_recent': True} if program_uuid else {'page': 1}
+    
     try:
         if program_uuid:
-            response = client.get(api_path, params=params)
+            response = client.get(api_path)
             response.raise_for_status()
             subscription_data = response.json().get('results', [])[0:1]
         else:
+            params = {'page': 1, 'resource_id': program_uuid, 'most_active_and_recent': True}
             while params.get('page'):
                 response = client.get(api_path, params=params)
                 response.raise_for_status()
