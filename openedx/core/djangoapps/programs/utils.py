@@ -1067,12 +1067,12 @@ def get_programs_subscription_data(user, program_uuid=None):
             response.raise_for_status()
             subscription_data = response.json().get('results', [])[0:1]
         else:
-            parameters = {'page': 1}
-            while parameters.get('page'):
-                response = client.get(api_path, params=parameters)
+            next_page = 1
+            while next_page:
+                response = client.get(api_path, params=dict(page=next_page))
                 response.raise_for_status()
                 subscription_data.extend(response.json().get('results', []))
-                parameters['page'] = response.json().get('next')
+                next_page = response.json().get('next')
         return subscription_data
     except:  # pylint: disable=bare-except
         log.exception(
